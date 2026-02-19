@@ -24,9 +24,8 @@ COPY . /app/
 # Collect static files
 RUN python manage.py collectstatic --noinput
 
-# Run migrations (will be executed at runtime)
 # Expose port
 EXPOSE 8000
 
-# Start command
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "4", "--timeout", "120", "english_learning.wsgi:application"]
+# Start command: 先执行迁移，再启动服务
+CMD ["sh", "-c", "python manage.py migrate && gunicorn --bind 0.0.0.0:8000 --workers 4 --timeout 120 english_learning.wsgi:application"]
